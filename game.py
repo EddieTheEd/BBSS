@@ -122,7 +122,12 @@ Note: spacing and case is important
         status = ''
         acts = ''
         for i in range(len(self.players)):
-            status += f'Player {i+1} has {self.players[i].bullets} bullets, was shot {self.players[i].shots} times this round, blocked against {self.players[i].defense} shots, uses {self.players[i].ai} algorithm and is {"alive" if self.players[i].alive else "dead"}. \n'
+            if (self.players[i].shots < 69):
+                status += f'''Player {i+1} has {self.players[i].bullets} bullets, was shot {self.players[i].shots} times this round, blocked against {self.players[i].defense} shots 
+and is {"alive" if self.players[i].alive else "dead"}. \n'''
+            else:
+                status += f'''Player {i+1} has {self.players[i].bullets} bullets, was shot {self.players[i].shots-69} times this round, blocked against {self.players[i].defense} shots 
+and is dead becuase they played an illegal move. \n'''
             acts += f'Player {i+1} executed action {self.players[i].action} \n'
         return f'''
 ----------------------------------------------------------------- BBSS Game Review -----------------------------------------------------------------
