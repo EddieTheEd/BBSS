@@ -4,15 +4,28 @@ class scriptManager:
             ['RNG', '''
 import random as r
 action = ''
-action += r.choice(['r','b','b b','s','ss'])        
+choices = ['r','r','b','b b','s','ss'] # equal chances to reload, block or shoot
+action += r.choice(choices)
 if action == 's':
     action += ' '  
-    action += str(r.randint(0, len(gamestate['players'])))  
+    alivePlayers = []
+    for i in range(len(gamestate['players'])):
+        if gamestate['players'][i].alive and i != playerNumber:
+            alivePlayers.append(i)
+    action += str(r.choice(alivePlayers)+1)
 if action == 'ss':
     action += ' '  
-    action += str(r.randint(0, len(gamestate['players'])))  
+    alivePlayers = []
+    for i in range(len(gamestate['players'])):
+        if gamestate['players'][i].alive and i != playerNumber:
+            alivePlayers.append(i)
+    action += str(r.choice(alivePlayers)+1)
     action += ' '  
-    action += str(r.randint(0, len(gamestate['players'])))  
+    alivePlayers = []
+    for i in range(len(gamestate['players'])):
+        if gamestate['players'][i].alive and i != playerNumber:
+            alivePlayers.append(i)
+    action += str(r.choice(alivePlayers)+1)
 '''],
             ['temp', '''
  
@@ -82,7 +95,7 @@ Note: spacing and case is important
                     self.players[player].defense = min(len(processed), 2)
                     #print(f'Player {player+1} defends against exactly {self.players[player].defense} bullets.')
                 case 's': 
-                    if (self.players[player].bullets > 0):
+                    if (self.players[player].bullets >= 1):
                         self.players[int(processed[1])-1].shots += 1
                         self.players[player].bullets -= 1
                         #print(f'Player {player+1} shoots {self.players[processed[1]]}')
@@ -90,7 +103,7 @@ Note: spacing and case is important
                         self.players[player].shots += 69
                         #print(f'Player {player+1} shoots themselves')
                 case 'ss':
-                    if (self.players[player].bullets > 2):
+                    if (self.players[player].bullets >= 2):
                         self.players[int(processed[1])-1].shots += 1
                         self.players[int(processed[2])-1].shots += 1
                         self.players[player].bullets -= 2
@@ -155,20 +168,59 @@ Player Statuses:
         return {'players': self.players, 'round': self.turn, 'remainingPlayers': self.remainingPlayers}
 
 # Testing Code
-scripts = scriptManager()                                        # create a new script manager
+scripts = scriptManager()                                                            # create a new script manager
 scripts.scripts.append(['terrorist', '''
 import random as r
 if gamestate['players'][playerNumber].bullets == 0:
     action = 'r'
 else:
     action = 's '  
-    action += str(r.randint(0, len(gamestate['players'])))  
-'''],)                                                           # add the 'terrorist' script (alternate between reload and shoot)
-newGame = BBSS(3, scripts.scripts, ['RNG', 'RNG', 'terrorist'])  # create a game with 5 players
-print(BBSS.rules())                                              # print the rules of BBSS
-print(newGame)                                                   # print the current gamestate
-print(newGame.getGamestate())                                    # print the data that scripts get access to
-newGame.step()                                                   # run 1 round of the game
-newGame.runGame()                                                # run game until completion
+    alivePlayers = []
+    for i in range(len(gamestate['players'])):
+        if gamestate['players'][i].alive and i != playerNumber:
+            alivePlayers.append(i)
+    action += str(r.choice(alivePlayers)+1)
+'''],)                                                                               # add the 'terrorist' script (alternate between reload and shoot)
+scripts.scripts.append(['smart RNG', '''
+import random as r
+action = ''
+
+choices = ['r','r','b','b b']
+if gamestate['round'] == 1:
+    choices = ['r']
+if gamestate['players'][playerNumber].bullets >= 1:
+    choices.append('s')
+if gamestate['players'][playerNumber].bullets >= 2:
+    choices.append('ss')
+if gamestate['players'][playerNumber].bullets >= 3:
+    choices = ['ss', 's']
+action += r.choice(choices)
+if action == 's':
+    action += ' '  
+    alivePlayers = []
+    for i in range(len(gamestate['players'])):
+        if gamestate['players'][i].alive and i != playerNumber:
+            alivePlayers.append(i)
+    action += str(r.choice(alivePlayers)+1)
+if action == 'ss':
+    action += ' '  
+    alivePlayers = []
+    for i in range(len(gamestate['players'])):
+        if gamestate['players'][i].alive and i != playerNumber:
+            alivePlayers.append(i)
+    action += str(r.choice(alivePlayers)+1)
+    action += ' '  
+    alivePlayers = []
+    for i in range(len(gamestate['players'])):
+        if gamestate['players'][i].alive and i != playerNumber:
+            alivePlayers.append(i)
+    action += str(r.choice(alivePlayers)+1)
+'''],)                                                                               # smarter RNG bot that does not self unalive
+newGame = BBSS(3, scripts.scripts)                                                   # create a game
+print(BBSS.rules())                                                                  # print the rules of BBSS
+#print(newGame)                                                                      # print the current gamestate
+#print(newGame.getGamestate())                                                       # print the data that scripts get access to
+#newGame.step()                                                                      # run 1 round of the game
+newGame.runGame()                                                                    # run game until completion
 
 
