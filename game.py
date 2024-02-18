@@ -230,7 +230,7 @@ if action == 'ss':
 #newGame.step()                                                                      # run 1 round of the game
 # newGame.runGame()                                                                    # run game until completion
 
-NumPlayers = 12
+NumPlayers = 30
 
 print("RUNNING")
 for i in range (2000):
