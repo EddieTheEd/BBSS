@@ -230,10 +230,11 @@ if action == 'ss':
 #newGame.step()                                                                      # run 1 round of the game
 # newGame.runGame()                                                                    # run game until completion
 
-NumPlayers = 30
+NumPlayers = int(input("How many players?\n"))
+totalGames = int(input("How many games?\n"))
 
 print("RUNNING")
-for i in range (2000):
+for i in range (totalGames):
     newGame = BBSS(NumPlayers, scripts.scripts, ['smart RNG']*NumPlayers)                                               # create a games
     newGame.runGame(False)                                                           # run game until completion
 
