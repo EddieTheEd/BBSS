@@ -153,6 +153,8 @@ Player Statuses:
                 print(self)
         if logging:
             print('Game Over')
+        with open('log.txt', 'a') as f:
+            f.write('{}\n'.format(self.turn))
     
     def step(self, logging=True):
         if self.remainingPlayers > 1:
@@ -221,11 +223,29 @@ if action == 'ss':
             alivePlayers.append(i)
     action += str(r.choice(alivePlayers)+1)
 '''],)                                                                               # smarter RNG bot that does not self unalive
-newGame = BBSS(3, scripts.scripts)                                                   # create a game
-print(BBSS.rules())                                                                  # print the rules of BBSS
+# newGame = BBSS(3, scripts.scripts)                                                   # create a game
+# print(BBSS.rules())                                                                  # print the rules of BBSS
 #print(newGame)                                                                      # print the current gamestate
 #print(newGame.getGamestate())                                                       # print the data that scripts get access to
 #newGame.step()                                                                      # run 1 round of the game
-newGame.runGame()                                                                    # run game until completion
+# newGame.runGame()                                                                    # run game until completion
+
+
+print("RUNNING")
+for i in range (10000):
+    newGame = BBSS(3, scripts.scripts)                                               # create a game
+    newGame.runGame(False)                                                           # run game until completion
+
+
+print('\n'*10)
+
+with open('log.txt', 'r') as f:
+    data = f.read()
+    data = data.split('\n')
+    data = [int(i) for i in data if i]
+    print(f'Average game length: {round(sum(data)/len(data), 2)}')
+    print(f'Minimum game length: {min(data)}')
+    print(f'Maximum game length: {max(data)}')
+
 
 
