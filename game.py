@@ -153,7 +153,7 @@ Player Statuses:
                 print(self)
         if logging:
             print('Game Over')
-        with open('logs/log5smartrng.txt', 'a') as f:
+        with open('logs/log{}smartrng.txt'.format(len(self.players)), 'a') as f:
             f.write('{}\n'.format(self.turn))
     
     def step(self, logging=True):
@@ -230,16 +230,17 @@ if action == 'ss':
 #newGame.step()                                                                      # run 1 round of the game
 # newGame.runGame()                                                                    # run game until completion
 
+NumPlayers = 12
 
 print("RUNNING")
-for i in range (1000):
-    newGame = BBSS(5, scripts.scripts, ['smart RNG']*5)                                               # create a game
+for i in range (2000):
+    newGame = BBSS(NumPlayers, scripts.scripts, ['smart RNG']*NumPlayers)                                               # create a games
     newGame.runGame(False)                                                           # run game until completion
 
 
 print('\n')
 
-with open('logs/log5smartrng.txt', 'r') as f:
+with open('logs/log{}smartrng.txt'.format(NumPlayers), 'r') as f:
     data = f.read()
     data = data.split('\n')
     data = [int(i) for i in data if i]
